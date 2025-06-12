@@ -152,39 +152,39 @@ export default function TransactionModal({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-slate-800 p-6 rounded-lg border border-slate-700 w-full max-w-md">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-semibold text-white">Add Transaction</h2>
+      <div className="bg-slate-800 p-8 rounded-2xl border border-slate-700 w-full max-w-md">
+        <div className="flex justify-between items-center mb-8">
+          <h2 className="text-2xl font-semibold text-white">Add Transaction</h2>
           <button
             onClick={onClose}
             className="text-slate-400 hover:text-white transition-colors"
           >
-            <X className="w-5 h-5" />
+            <X className="w-6 h-6" />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1">
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-slate-300">
               Type
             </label>
             <select
-              className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
               value={formData.type}
               onChange={(e) =>
                 setFormData({ ...formData, type: e.target.value as 'BUY' | 'SELL' | 'DEPOSIT' | 'WITHDRAWAL' })
               }
             >
-              <option value="BUY">Buy Stock</option>
-              <option value="SELL">Sell Stock</option>
+              <option value="BUY">Buy Asset</option>
+              <option value="SELL">Sell Asset</option>
               <option value="DEPOSIT">Cash Deposit</option>
               <option value="WITHDRAWAL">Cash Withdrawal</option>
             </select>
           </div>
 
           {!isCashTransaction && (
-            <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1">
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-slate-300">
                 Symbol
               </label>
               <SymbolSearch
@@ -195,15 +195,15 @@ export default function TransactionModal({
             </div>
           )}
 
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1">
+          <div className="grid grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-slate-300">
                 {isCashTransaction ? 'Amount' : 'Quantity'}
               </label>
               <input
                 type="number"
                 step={isCashTransaction ? "0.01" : "0.0001"}
-                className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
                 placeholder="0.00"
                 value={formData.quantity}
                 onChange={(e) =>
@@ -214,14 +214,14 @@ export default function TransactionModal({
             </div>
 
             {!isCashTransaction && (
-              <div>
-                <label className="block text-sm font-medium text-slate-300 mb-1">
-                  Price {isPriceFetching && <span className="text-xs text-green-400">(fetching...)</span>}
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-slate-300">
+                  Price {isPriceFetching && <span className="text-xs text-green-400 ml-2">(fetching...)</span>}
                 </label>
                 <input
                   type="number"
                   step="0.01"
-                  className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
                   placeholder="0.00"
                   value={formData.price}
                   onChange={(e) =>
@@ -234,13 +234,13 @@ export default function TransactionModal({
             )}
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1">
+          <div className="grid grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-slate-300">
                 Currency
               </label>
               <select
-                className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
                 value={formData.currency}
                 onChange={(e) =>
                   setFormData({ ...formData, currency: e.target.value as Currency })
@@ -251,13 +251,13 @@ export default function TransactionModal({
               </select>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1">
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-slate-300">
                 Date
               </label>
               <input
                 type="date"
-                className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
                 value={formData.date}
                 onChange={(e) =>
                   setFormData({ ...formData, date: e.target.value })
@@ -268,23 +268,23 @@ export default function TransactionModal({
           </div>
 
           {error && (
-            <div className="text-red-400 text-sm bg-red-900/20 border border-red-500/20 rounded-lg p-3">
+            <div className="text-red-400 text-sm bg-red-900/20 border border-red-500/20 rounded-xl p-4">
               {error}
             </div>
           )}
 
-          <div className="flex space-x-3 pt-4">
+          <div className="flex space-x-4 pt-4">
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-4 py-2 bg-slate-700 text-slate-300 rounded-lg hover:bg-slate-600 transition-colors"
+              className="flex-1 px-6 py-3 bg-slate-700 text-slate-300 rounded-xl hover:bg-slate-600 transition-colors"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isLoading}
-              className="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="flex-1 px-6 py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               {isLoading ? 'Adding...' : 'Add Transaction'}
             </button>

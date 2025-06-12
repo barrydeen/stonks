@@ -8,6 +8,7 @@ import CurrencySelector from './CurrencySelector';
 import { useCurrency } from '@/contexts/CurrencyContext';
 import { useAuth } from '@/contexts/AuthContext';
 import type { Currency } from '@/lib/currency';
+import SideMenu from './SideMenu';
 
 interface Transaction {
   id: string;
@@ -266,30 +267,11 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-      <div className="container mx-auto px-6 sm:px-8 lg:px-12 py-8 max-w-7xl">
-        {/* Header Section */}
-        <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center mb-12 space-y-6 lg:space-y-0">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-6">
-            <CurrencySelector />
-            <button
-              onClick={() => setIsModalOpen(true)}
-              className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 px-6 py-3 rounded-xl font-semibold transition-all duration-200 flex items-center space-x-3 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
-            >
-              <Plus className="w-5 h-5" />
-              <span>Add Transaction</span>
-            </button>
-          </div>
-          <div className="flex items-center">
-            <button
-              onClick={logout}
-              className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-200 flex items-center space-x-3 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
-            >
-              <TrendingDown className="w-5 h-5" />
-              <span>Logout</span>
-            </button>
-          </div>
-        </div>
-
+      <SideMenu
+        onAddTransaction={() => setIsModalOpen(true)}
+        onLogout={logout}
+      />
+      <div className="container mx-auto px-6 sm:px-8 lg:px-12 py-8 pt-28 max-w-7xl">
         {/* Portfolio Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
           <div className="bg-gradient-to-br from-slate-800 to-slate-700 p-8 rounded-2xl border border-slate-600/50 shadow-xl backdrop-blur-sm">
