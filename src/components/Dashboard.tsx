@@ -76,6 +76,20 @@ export default function Dashboard() {
   const [isLoading, setIsLoading] = useState(true);
   const [isChartLoading, setIsChartLoading] = useState(false);
   const [authError, setAuthError] = useState<string | null>(null);
+  const [windowWidth, setWindowWidth] = useState<number>(typeof window !== 'undefined' ? window.innerWidth : 0);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const pieOuterRadius = useMemo(() => {
+    if (windowWidth < 640) return 50;      // mobile
+    if (windowWidth < 1024) return 70;    // tablet
+    return 120;                            // desktop
+  }, [windowWidth]);
 
   useEffect(() => {
     if (!currencyLoading && token) {
@@ -409,7 +423,7 @@ export default function Dashboard() {
                       data={pieData}
                       cx="50%"
                       cy="50%"
-                      outerRadius={120}
+                      outerRadius={pieOuterRadius}
                       fill="#8884d8"
                       dataKey="value"
                       label={({ name, percent }) => `${name} ${(percent * 100).toFixed(1)}%`}
@@ -429,7 +443,7 @@ export default function Dashboard() {
                         fontSize: '14px'
                       }}
                     />
-                    <Legend />
+                    {/* <Legend /> */}
                   </PieChart>
                 </ResponsiveContainer>
               </div>
