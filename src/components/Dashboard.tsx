@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend, LineChart, Line, XAxis, YAxis, CartesianGrid } from 'recharts';
 import { TrendingUp, TrendingDown, DollarSign, Plus, Minus } from 'lucide-react';
 import TransactionModal from './TransactionModal';
@@ -86,10 +86,31 @@ export default function Dashboard() {
   }, []);
 
   const pieOuterRadius = useMemo(() => {
-    if (windowWidth < 640) return 50;      // mobile
-    if (windowWidth < 1024) return 70;    // tablet
-    return 120;                            // desktop
+    if (windowWidth < 640) return 80;      // mobile (small screens)
+    if (windowWidth < 1024) return 110;    // tablet / small laptops
+    return 140;                            // desktop and larger
   }, [windowWidth]);
+
+  // Custom label inside pie slices
+  const renderPieLabel = useCallback(({ cx, cy, midAngle, innerRadius, outerRadius, percent, name }: any) => {
+    const RADIAN = Math.PI / 180;
+    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+    const x = cx + radius * Math.cos(-midAngle * RADIAN);
+    const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+    return (
+      <text
+        x={x}
+        y={y}
+        fill="#f1f5f9"
+        textAnchor={x > cx ? 'start' : 'end'}
+        dominantBaseline="central"
+        fontSize={12}
+      >
+        {`${name} ${(percent * 100).toFixed(0)}%`}
+      </text>
+    );
+  }, []);
 
   useEffect(() => {
     if (!currencyLoading && token) {
@@ -426,7 +447,7 @@ export default function Dashboard() {
                       outerRadius={pieOuterRadius}
                       fill="#8884d8"
                       dataKey="value"
-                      label={({ name, percent }) => `${name} ${(percent * 100).toFixed(1)}%`}
+                      label={renderPieLabel}
                       labelLine={false}
                     >
                       {pieData.map((entry, index) => (
@@ -443,7 +464,6 @@ export default function Dashboard() {
                         fontSize: '14px'
                       }}
                     />
-                    {/* <Legend /> */}
                   </PieChart>
                 </ResponsiveContainer>
               </div>
