@@ -9,6 +9,7 @@ import { useCurrency } from '@/contexts/CurrencyContext';
 import { useAuth } from '@/contexts/AuthContext';
 import type { Currency } from '@/lib/currency';
 import SideMenu from './SideMenu';
+import AssetInfoModal from './AssetInfoModal';
 
 interface Transaction {
   id: string;
@@ -55,11 +56,11 @@ interface ChartDataPoint {
 const COLORS = ['#10b981', '#3b82f6', '#8b5cf6', '#f59e0b', '#ef4444', '#06b6d4', '#84cc16'];
 
 const TIME_RANGES = [
-  { key: '7d', label: '7 Days' },
-  { key: '30d', label: '30 Days' },
-  { key: '3m', label: '3 Months' },
-  { key: '6m', label: '6 Months' },
-  { key: '12m', label: '12 Months' }
+  { key: '7d', label: '7D' },
+  { key: '30d', label: '1M' },
+  { key: '3m', label: '3M' },
+  { key: '6m', label: '6M' },
+  { key: '12m', label: '12M' }
 ];
 
 export default function Dashboard() {
@@ -70,6 +71,8 @@ export default function Dashboard() {
   const [chartData, setChartData] = useState<ChartDataPoint[]>([]);
   const [selectedTimeRange, setSelectedTimeRange] = useState('30d');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedHoldingSymbol, setSelectedHoldingSymbol] = useState<string | null>(null);
+  const [isHoldingModalOpen, setIsHoldingModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isChartLoading, setIsChartLoading] = useState(false);
   const [authError, setAuthError] = useState<string | null>(null);
@@ -308,23 +311,18 @@ export default function Dashboard() {
 
         {/* Portfolio Value Chart */}
         <div className="bg-gradient-to-br from-slate-800 to-slate-700 p-8 rounded-2xl border border-slate-600/50 shadow-xl backdrop-blur-sm mb-12">
-          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 space-y-4 sm:space-y-0">
-            <h2 className="text-2xl font-bold text-white">Portfolio Value Over Time</h2>
-            <div className="flex flex-wrap gap-2">
+          <div className="flex justify-end mb-6">
+            <select
+              value={selectedTimeRange}
+              onChange={(e) => setSelectedTimeRange(e.target.value)}
+              className="bg-slate-700 text-slate-300 px-4 py-2 rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-green-500"
+            >
               {TIME_RANGES.map((range) => (
-                <button
-                  key={range.key}
-                  onClick={() => setSelectedTimeRange(range.key)}
-                  className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
-                    selectedTimeRange === range.key
-                      ? 'bg-green-600 text-white shadow-lg'
-                      : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
-                  }`}
-                >
+                <option key={range.key} value={range.key} className="bg-slate-700 text-slate-300">
                   {range.label}
-                </button>
+                </option>
               ))}
-            </div>
+            </select>
           </div>
           
           {isChartLoading ? (
@@ -403,7 +401,6 @@ export default function Dashboard() {
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mb-12">
           {/* Portfolio Allocation Chart */}
           <div className="bg-gradient-to-br from-slate-800 to-slate-700 p-8 rounded-2xl border border-slate-600/50 shadow-xl backdrop-blur-sm">
-            <h2 className="text-2xl font-bold text-white mb-6">Portfolio Allocation</h2>
             {pieData.length > 0 ? (
               <div className="h-80">
                 <ResponsiveContainer width="100%" height="100%">
@@ -425,10 +422,11 @@ export default function Dashboard() {
                     <Tooltip 
                       formatter={(value: number) => formatCurrency(value)} 
                       contentStyle={{
-                        backgroundColor: '#1e293b',
-                        border: '1px solid #475569',
+                        backgroundColor: '#ffffff',
+                        border: '1px solid #ffffff',
                         borderRadius: '12px',
-                        color: '#f1f5f9'
+                        color: '#ffffff',
+                        fontSize: '14px'
                       }}
                     />
                     <Legend />
@@ -454,7 +452,16 @@ export default function Dashboard() {
             {convertedPortfolio && convertedPortfolio.holdings.length > 0 ? (
               <div className="space-y-1">
                 {convertedPortfolio.holdings.map((holding, index) => (
-                  <div key={`${holding.symbol}-${holding.currency}`} className={`py-4 px-2 hover:bg-slate-700/30 transition-colors rounded-lg ${index < convertedPortfolio.holdings.length - 1 ? 'border-b border-slate-700/30' : ''}`}>
+                  <div
+                    key={`${holding.symbol}-${holding.currency}`}
+                    onClick={() => {
+                      if (!holding.isCash) {
+                        setSelectedHoldingSymbol(holding.symbol);
+                        setIsHoldingModalOpen(true);
+                      }
+                    }}
+                    className={`py-4 px-2 hover:bg-slate-700/30 transition-colors rounded-lg ${index < convertedPortfolio.holdings.length - 1 ? 'border-b border-slate-700/30' : ''} ${holding.isCash ? '' : 'cursor-pointer'}`}
+                  >
                     {/* Main row: Symbol and Value */}
                     <div className="flex justify-between items-center mb-1">
                       <div className="font-semibold text-white text-lg">
@@ -574,6 +581,13 @@ export default function Dashboard() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onTransactionAdded={handleTransactionAdded}
+      />
+
+      {/* Asset details modal */}
+      <AssetInfoModal
+        isOpen={isHoldingModalOpen}
+        onClose={() => setIsHoldingModalOpen(false)}
+        symbol={selectedHoldingSymbol}
       />
     </div>
   );

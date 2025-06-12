@@ -1,5 +1,5 @@
 import React from 'react';
-import { Menu, X, Plus, LogOut } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import CurrencySelector from './CurrencySelector';
 
 interface SideMenuProps {
@@ -46,44 +46,41 @@ export default function SideMenu({ onAddTransaction, onLogout }: SideMenuProps) 
           <div className="flex justify-end">
             <button
               onClick={() => setIsOpen(false)}
-              className="p-2 rounded-lg hover:bg-slate-700/50 transition-colors"
+              className="p-2 rounded-lg bg-blue-900 hover:bg-blue-800 transition-colors"
             >
-              <X className="w-6 h-6 text-slate-400" />
+              <X className="w-6 h-6 text-slate-300" />
             </button>
           </div>
 
           {/* Menu items */}
-          <div className="space-y-6">
-            <div className="space-y-2">
-              <h3 className="text-sm font-medium text-slate-400 uppercase tracking-wider">
-                Settings
-              </h3>
-              <div className="p-2 bg-slate-800/50 rounded-xl">
-                <CurrencySelector />
-              </div>
+          <div className="space-y-10">
+            {/* Currency toggle centered */}
+            <div className="flex justify-center mb-10">
+              <CurrencySelector />
             </div>
 
-            <div className="space-y-2">
-              <h3 className="text-sm font-medium text-slate-400 uppercase tracking-wider">
-                Actions
-              </h3>
-              <div className="space-y-2">
-                <button
-                  onClick={onAddTransaction}
-                  className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 px-4 py-3 rounded-xl font-semibold transition-all duration-200 flex items-center space-x-3"
-                >
-                  <Plus className="w-5 h-5" />
-                  <span>Add Transaction</span>
-                </button>
-
-                <button
-                  onClick={onLogout}
-                  className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 px-4 py-3 rounded-xl font-semibold transition-all duration-200 flex items-center space-x-3"
-                >
-                  <LogOut className="w-5 h-5" />
-                  <span>Logout</span>
-                </button>
-              </div>
+            {/* Links */}
+            <div className="w-full divide-y divide-white/20 text-left text-white font-semibold tracking-wide">
+              <a
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  onAddTransaction();
+                }}
+                className="block py-4 px-4 hover:bg-slate-700/40 transition-colors"
+              >
+                Add Transaction
+              </a>
+              <a
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  onLogout();
+                }}
+                className="block py-4 px-4 hover:bg-slate-700/40 transition-colors"
+              >
+                Logout
+              </a>
             </div>
           </div>
         </div>
